@@ -73,9 +73,9 @@ function crawlPage(url, prefix) {
             try {
                 if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith("http") === true) {
                     console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
-                    await page.goto(addresses[i], { waitUntil: "networkidle0", timeout: 30000 });
+                    await page.goto(addresses[i], { waitUntil: "networkidle0", timeout: 0 });
 
-                    const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 30000 });
+                    const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 0 });
                     await watchDog;
 
                     await page.screenshot({
