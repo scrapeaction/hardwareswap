@@ -93,5 +93,5 @@ async function screenshot(page, address, prefix, iterator, length) {
         path: `screenshots/${prefix}-${iterator.toString().padStart(padding, '0')}-fold.png`,
         fullPage: false
     });
-    scrape(page, address, `${prefix}-${iterator}`);
+    await scrape(page, address, `${prefix}-${iterator}`);
 }
