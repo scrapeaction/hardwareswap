@@ -6,6 +6,8 @@ const total_allowed_time = (((5 * 60) + 30) * 60) * 1000;
 
 const home = `https://old.reddit.com/user/7165015874/m/buy/`;
 
+const master_list = [];
+
 crawlPage(home, "hardwareswap");
 
 function delay(time) {
@@ -59,7 +61,8 @@ async function scrape(page, url, prefix) {
             console.log({ current_time: Date.now() });
             console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
 
-            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`https://`) === true) {
+            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`https://`) === true && master_list.find(addresses[i] === undefined)) {
+                master_list.push(addresses[i]);
                 console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
                 await screenshot(page, addresses[i], prefix, i, addresses.length);
             }
