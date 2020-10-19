@@ -62,7 +62,7 @@ async function scrape(page, url, prefix) {
 
             if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`https://`) === true) {
                 console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
-                await screenshot(page, addresses[i], prefix);
+                await screenshot(page, addresses[i], prefix, i);
             }
         } catch (error) {
             console.error(error);
@@ -74,7 +74,7 @@ async function scrape(page, url, prefix) {
     }
 }
 
-async function screenshot(page, address, prefix) {
+async function screenshot(page, address, prefix, iterator) {
     await page.goto(address,
         {
             waitUntil: "networkidle0",
