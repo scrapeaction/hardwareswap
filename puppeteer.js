@@ -74,7 +74,7 @@ async function scrape(page, url, prefix) {
 }
 
 async function screenshot(page, address, prefix, iterator, length) {
-    const padding = addresses.length % 10;
+    const padding = length % 10;
     await page.goto(address,
         {
             waitUntil: "networkidle0",
