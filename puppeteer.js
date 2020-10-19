@@ -35,21 +35,7 @@ function crawlPage(url, prefix) {
             height: 1080
         });
 
-        await page.goto(url, {
-            waitUntil: 'networkidle0',
-            timeout: 0
-        });
-
-        await page.screenshot({
-            path: `screenshots/${prefix}.png`,
-            fullPage: true
-        });
-        await page.screenshot({
-            path: `screenshots/${prefix}-fold.png`,
-            fullPage: false
-        });
-
-        await doSomething(page, prefix);
+        await scrape(page, prefix);
 
         await page.close();
         await browser.close();
@@ -60,16 +46,29 @@ function crawlPage(url, prefix) {
 
 }
 
-async function doSomething(page, prefix) {
+async function scrape(page, url, prefix) {
+
+    await page.goto(url, {
+        waitUntil: 'networkidle0',
+        timeout: 0
+    });
+
     const addresses = await page.$$eval('a', as => as.map(a => a.href));
     const padding = addresses.length % 10;
     for (let i = 0; i < addresses.length; i++) {
         try {
             console.log({ current_time: Date.now() });
             console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
-            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(home) === true) {
+
+            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`http`) === true) {
+
                 console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
-                await page.goto(addresses[i], { waitUntil: "networkidle0", timeout: 0 });
+                await page.goto(addresses[i],
+                    {
+                        waitUntil: "networkidle0",
+                        timeout: 0
+                    }
+                );
 
                 const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 0 });
                 await watchDog;
