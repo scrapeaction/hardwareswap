@@ -49,7 +49,7 @@ function crawlPage(url, prefix) {
             fullPage: false
         });
 
-        await doSomething(page);
+        await doSomething(page, prefix);
 
         await page.close();
         await browser.close();
@@ -60,7 +60,7 @@ function crawlPage(url, prefix) {
 
 }
 
-async function doSomething(page) {
+async function doSomething(page, prefix) {
     const addresses = await page.$$eval('a', as => as.map(a => a.href));
     const padding = addresses.length % 10;
     for (let i = 0; i < addresses.length; i++) {
