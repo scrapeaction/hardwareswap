@@ -4,9 +4,9 @@ const puppeteer = require('puppeteer');
 const start_time = Date.now();
 const total_allowed_time = (((5 * 60) + 30) * 60) * 1000;
 
-const home = `https://news.ycombinator.com/`;
+const home = `https://old.reddit.com/user/7165015874/m/buy/`;
 
-crawlPage(home, "hacker-news");
+crawlPage(home, "hardwareswap");
 
 function delay(time) {
     return new Promise(function (resolve) {
@@ -60,27 +60,9 @@ async function scrape(page, url, prefix) {
             console.log({ current_time: Date.now() });
             console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
 
-            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`http`) === true) {
-
+            if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`https://`) === true) {
                 console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
-                await page.goto(addresses[i],
-                    {
-                        waitUntil: "networkidle0",
-                        timeout: 0
-                    }
-                );
-
-                const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 0 });
-                await watchDog;
-
-                await page.screenshot({
-                    path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}.png`,
-                    fullPage: true
-                });
-                await page.screenshot({
-                    path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}-fold.png`,
-                    fullPage: false
-                });
+                await screenshot(page, addresses[i], prefix);
             }
         } catch (error) {
             console.error(error);
@@ -90,4 +72,25 @@ async function scrape(page, url, prefix) {
             console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
         };
     }
+}
+
+async function screenshot(page, address, prefix) {
+    await page.goto(address,
+        {
+            waitUntil: "networkidle0",
+            timeout: 0
+        }
+    );
+
+    const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 0 });
+    await watchDog;
+
+    await page.screenshot({
+        path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}.png`,
+        fullPage: true
+    });
+    await page.screenshot({
+        path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}-fold.png`,
+        fullPage: false
+    });
 }
