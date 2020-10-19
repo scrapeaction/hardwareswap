@@ -86,11 +86,11 @@ async function screenshot(page, address, prefix, iterator) {
     await watchDog;
 
     await page.screenshot({
-        path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}.png`,
+        path: `screenshots/${prefix}-${iterator.toString().padStart(padding, '0')}.png`,
         fullPage: true
     });
     await page.screenshot({
-        path: `screenshots/${prefix}-${i.toString().padStart(padding, '0')}-fold.png`,
+        path: `screenshots/${prefix}-${iterator.toString().padStart(padding, '0')}-fold.png`,
         fullPage: false
     });
 }
