@@ -35,7 +35,7 @@ function crawlPage(url, prefix) {
             height: 1080
         });
 
-        await scrape(page, prefix);
+        await scrape(page, url, prefix);
 
         await page.close();
         await browser.close();
