@@ -4,27 +4,7 @@ const puppeteer = require('puppeteer');
 const start_time = Date.now();
 const total_allowed_time = (((5 * 60) + 30) * 60) * 1000;
 
-crawlPage("https://washingtonpost.com", "frontpage");
-crawlPage("https://washingtonpost.com/todays_paper/updates/", "todays-paper");
-crawlPage("https://washingtonpost.com/politics/", "politics");
-crawlPage("https://washingtonpost.com/opinions", "opinions");
-crawlPage("https://washingtonpost.com/national/investigations", "investigations");
-crawlPage("https://washingtonpost.com/business/technology", "technology");
-crawlPage("https://washingtonpost.com/world", "world");
-crawlPage("https://washingtonpost.com/dc", "dc");
-crawlPage("https://washingtonpost.com/sports", "sports");
-crawlPage("https://washingtonpost.com/race-america", "race-and-reckoning");
-crawlPage("https://washingtonpost.com/entertainment", "arts-and-entertainment");
-crawlPage("https://washingtonpost.com/business", "business");
-crawlPage("https://washingtonpost.com/personal-finance", "personal-finance");
-crawlPage("https://washingtonpost.com/climate-environment", "climante-and-environment");
-crawlPage("https://washingtonpost.com/elections", "elections");
-crawlPage("https://washingtonpost.com/immigration", "immigration");
-crawlPage("https://washingtonpost.com/transportation", "transportation");
-crawlPage("https://washingtonpost.com/travel", "travel");
-crawlPage("https://washingtonpost.com/video-games", "video-games");
-crawlPage("https://washingtonpost.com/outlook", "outlook");
-crawlPage("https://washingtonpost.com/outlook/five-myths", "five-myths");
+crawlPage("https://old.reddit.com/user/7165015874/m/buy/", "hardwareswap");
 
 function delay(time) {
     return new Promise(function (resolve) {
@@ -71,9 +51,15 @@ function crawlPage(url, prefix) {
         const padding = addresses.length % 10;
         for (let i = 0; i < addresses.length; i++) {
             try {
-                if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith("http") === true) {
+                console.log({ current_time: Date.now() });
+                console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
+                if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith("https://old.reddit.com") === true) {
                     console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
                     await page.goto(addresses[i], { waitUntil: "networkidle0", timeout: 0 });
+
+                    const addresses = await page.$$eval('a', as => as.map(a => a.href));
+                    const padding = addresses.length % 10;
+                    crawlPage(addresses[i], `hardwareswap-iteration-${i}`);
 
                     const watchDog = page.waitForFunction(() => 'window.status === "ready"', { timeout: 0 });
                     await watchDog;
@@ -91,6 +77,8 @@ function crawlPage(url, prefix) {
                 console.error(error);
             } finally {
                 console.log(`Finished with ${i} of ${addresses.length}: ${addresses[i]}`);
+                console.log({ current_time: Date.now() });
+                console.log(`elapsed_time: ${(Date.now() - start_time) / (1000 * 60)} minutes`);
             };
         }
 
