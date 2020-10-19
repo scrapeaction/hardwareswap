@@ -54,7 +54,6 @@ async function scrape(page, url, prefix) {
     });
 
     const addresses = await page.$$eval('a', as => as.map(a => a.href));
-    const padding = addresses.length % 10;
     for (let i = 0; i < addresses.length; i++) {
         try {
             console.log({ current_time: Date.now() });
@@ -62,7 +61,7 @@ async function scrape(page, url, prefix) {
 
             if (Date.now() - start_time < total_allowed_time && addresses[i].startsWith(`https://`) === true) {
                 console.log(`Now serving ${i} of ${addresses.length}: ${addresses[i]}`);
-                await screenshot(page, addresses[i], prefix, i);
+                await screenshot(page, addresses[i], prefix, i, addresses.length);
             }
         } catch (error) {
             console.error(error);
@@ -74,7 +73,8 @@ async function scrape(page, url, prefix) {
     }
 }
 
-async function screenshot(page, address, prefix, iterator) {
+async function screenshot(page, address, prefix, iterator, length) {
+    const padding = addresses.length % 10;
     await page.goto(address,
         {
             waitUntil: "networkidle0",
